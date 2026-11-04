@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@theme {
+  --color-paper: #F8F7F4;
+  --color-ink: #1D2523;
+  --color-forest: #24483C;
+  --color-forest-dark: #1b382f;
+  --color-gold: #B99A63;
+  --color-muted: #5b6662;
+  --color-line: #e4e1d9;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+body { background: var(--color-paper); color: var(--color-ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+:focus-visible { outline: 3px solid var(--color-gold); outline-offset: 2px; }
+@layer components {
+  .wrap { @apply mx-auto w-full max-w-6xl px-5 sm:px-8; }
+  .btn { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 text-sm font-semibold transition-colors; }
+  .btn-primary { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 text-sm font-semibold transition-colors bg-forest text-white hover:bg-forest-dark; }
+  .btn-light { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 text-sm font-semibold transition-colors bg-white text-ink hover:bg-paper; }
+  .btn-outline { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 text-sm font-semibold transition-colors border border-ink/25 text-ink hover:bg-ink hover:text-white; }
+  .btn-outline-light { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 text-sm font-semibold transition-colors border border-white/50 text-white hover:bg-white hover:text-ink; }
+  .field { @apply w-full min-h-11 rounded-md border border-ink/25 bg-white px-3 text-sm text-ink; }
+  .label { @apply mb-1.5 block text-sm font-medium text-ink; }
+  .eyebrow { @apply text-xs font-semibold uppercase tracking-[0.14em] text-forest; }
+  .h2 { @apply text-3xl font-semibold tracking-tight text-ink sm:text-4xl; }
+}
