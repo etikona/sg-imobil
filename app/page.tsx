@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   ArrowRight,
+  MapPin,
   Phone,
   Scale,
   FileText,
@@ -15,11 +16,20 @@ import {
 import { SearchForm } from "@/components/SearchForm";
 import { PropertyCard } from "@/components/PropertyCard";
 import { InquiryForm } from "@/components/InquiryForm";
+
 import { getFeatured } from "@/lib/properties";
 import { site } from "@/lib/site";
 import { t } from "@/lib/i18n";
 
 export const metadata = { alternates: { canonical: "/" } };
+
+/*
+ * Tip: download this photo, convert to WebP/AVIF (~2000px wide) and put it in
+ * /public (e.g. "/images/hero.webp") for the best LCP. If you keep the remote URL,
+ * add images.unsplash.com to `images.remotePatterns` in next.config.js.
+ */
+const HERO_IMAGE =
+  "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2200&q=80";
 
 const services = [
   {
@@ -56,55 +66,94 @@ const services = [
 
 export default function HomePage() {
   const featured = getFeatured();
-  const hero = featured[0];
-  console.log(hero);
+
   return (
     <>
-      <section className="bg-forest text-white">
-        <div className="wrap grid items-center gap-10 py-14 lg:grid-cols-[1.15fr_.85fr] lg:py-20">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gold">
-              Agenție imobiliară · Chișinău
-            </p>
-            <h1 className="mt-4 text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
-              {t.hero.title}
-            </h1>
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
-              {t.hero.text}
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/proprietati" className="btn-light">
-                {t.hero.primary}
-                <ArrowRight size={16} aria-hidden />
-              </Link>
-              <Link href="/contact" className="btn-outline-light">
-                {t.hero.secondary}
-              </Link>
+      {/* ================= HERO ================= */}
+      <section aria-labelledby="hero-title" className="bg-forest text-white">
+        <div className="relative isolate overflow-hidden bg-[#101715]">
+          {/* Optimized, preloaded background (better LCP + indexable alt text) */}
+          <Image
+            src={HERO_IMAGE}
+            alt="Casă modernă disponibilă prin agenția imobiliară din Chișinău"
+            fill
+            priority
+            sizes="100vw"
+            className="-z-20 object-cover object-center"
+          />
+
+          {/* Overlays: readable text on the left, photo stays visible on the right */}
+          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#101715]/95 via-[#101715]/70 to-[#101715]/10" />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#101715]/85 via-transparent to-transparent" />
+
+          <div className="wrap flex min-h-[600px] flex-col justify-between gap-16 pb-8 pt-28 lg:min-h-[700px] lg:pt-36">
+            <div className="max-w-3xl">
+              <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium text-white/90 backdrop-blur-md">
+                <span
+                  className="h-1.5 w-1.5 rounded-full bg-gold"
+                  aria-hidden
+                />
+                Agenție imobiliară în Chișinău
+              </p>
+
+              <h1
+                id="hero-title"
+                className="text-balance text-4xl font-semibold leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl"
+              >
+                {t.hero.title}
+              </h1>
+
+              <p className="mt-6 max-w-xl text-pretty text-base leading-8 text-white/80 sm:text-lg">
+                {t.hero.text}
+              </p>
+
+              <div className="mt-9 flex flex-wrap items-center gap-4">
+                <Link
+                  href="/proprietati"
+                  className="btn-light group inline-flex items-center gap-3"
+                >
+                  {t.hero.primary}
+                  <ArrowRight
+                    size={17}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                    aria-hidden
+                  />
+                </Link>
+
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center rounded-lg border border-white/40 px-6 py-3.5 text-sm font-medium text-white transition hover:border-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                >
+                  {t.hero.secondary}
+                </Link>
+              </div>
             </div>
+
+            {/* Trust row */}
+            <ul className="flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-white/15 pt-6 text-sm text-white/75">
+              <li className="flex items-center gap-2">
+                <MapPin size={16} className="text-gold" aria-hidden />
+                Chișinău, Moldova
+              </li>
+              <li className="flex items-center gap-2">
+                <ShieldCheck size={16} className="text-gold" aria-hidden />
+                Suport juridic pe tot parcursul tranzacției
+              </li>
+              <li className="flex items-center gap-2">
+                <Clock size={16} className="text-gold" aria-hidden />
+                Consultație gratuită
+              </li>
+            </ul>
           </div>
-          {hero?.images[0] && (
-            <Link
-              href={`/proprietati/${hero.slug}`}
-              className="group relative hidden aspect-[4/3] overflow-hidden rounded-xl lg:block"
-              aria-label="Vezi proprietatea recomandată"
-            >
-              <Image
-                src={hero.images[0]}
-                alt="Fotografie a unui apartament listat de SG Imobil în Botanica, Chișinău"
-                fill
-                priority
-                sizes="40vw"
-                className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-              />
-            </Link>
-          )}
         </div>
 
-        <div className="wrap pb-10 lg:-mb-16 lg:pb-0">
+        {/* Your existing SearchForm, overlapping the next section on desktop */}
+        <div className="wrap pb-10 pt-6 lg:-mb-16 lg:pb-0 lg:pt-8">
           <SearchForm />
         </div>
       </section>
 
+      {/* ================= FEATURED ================= */}
       <section aria-labelledby="featured" className="wrap pt-16 lg:pt-32">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
@@ -125,6 +174,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ================= SERVICES ================= */}
       <section aria-labelledby="services" className="wrap pt-24">
         <p className="eyebrow">Oferta noastră</p>
         <h2 id="services" className="h2 mt-2 max-w-2xl">
@@ -150,6 +200,7 @@ export default function HomePage() {
         </Link>
       </section>
 
+      {/* ================= OWNERS ================= */}
       <section id="vinde" aria-labelledby="owner" className="mt-24 bg-white">
         <div className="wrap grid gap-10 py-16 lg:grid-cols-2">
           <div>
@@ -172,6 +223,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ================= FINANCING ================= */}
       <section aria-labelledby="fin" className="wrap pt-24">
         <div className="grid gap-8 rounded-xl bg-forest p-8 text-white sm:p-12 lg:grid-cols-[1.2fr_.8fr] lg:items-center">
           <div>
@@ -209,6 +261,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ================= WHY US ================= */}
       <section aria-labelledby="why" className="wrap pt-24">
         <p className="eyebrow">De ce SG Imobil</p>
         <h2 id="why" className="h2 mt-2">
@@ -244,6 +297,7 @@ export default function HomePage() {
         </ul>
       </section>
 
+      {/* ================= FINAL CTA ================= */}
       <section aria-labelledby="final" className="wrap pt-24">
         <div className="rounded-xl border border-line bg-white p-8 text-center sm:p-14">
           <h2 id="final" className="h2 mx-auto max-w-2xl">
